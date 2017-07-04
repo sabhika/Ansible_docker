@@ -1,0 +1,23 @@
+---
+- hosts: all
+  remote_user: root
+  vars_files: 
+    - secrets.yml
+  become: yes
+  become_method: sudo
+  tasks:
+  - name: Login to docker registry
+    docker_login:
+      username: "{{ docker_hub_username }}"
+      password: "{{ docker_hub_password }}"
+      email: "{{ docker_hub_email }}"
+  - name: create custom container
+    docker_container:
+      name: mycustomcontainer
+      image: nginx
+      state: started
+      exposed_ports: 
+        - 8080
+      ports:
+        "8080:80"
+      
